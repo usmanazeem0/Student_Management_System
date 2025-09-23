@@ -9,12 +9,27 @@ import Signup from "./signup";
 import Login from "./login";
 import DashBoard from "./dashboard";
 import PrivateRoute from "./privateRoutes";
+import PublicRoute from "./publicRoute";
 
 function App() {
   return (
     <Routes>
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/login" element={<Login />} />
+      <Route
+        path="/signup"
+        element={
+          <PublicRoute>
+            <Signup />{" "}
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <Login />{" "}
+          </PublicRoute>
+        }
+      />
       {/* Private Route */}
       <Route
         path="/dashboard"
