@@ -51,9 +51,24 @@ exports.studentAdd = async (req, res) => {
 
 exports.fetchStudent = async (req, res) => {
   try {
-    const { teacherId } = req.params;
-    const students = await Student.find({ teacher: req.user.id });
-    res.json(students);
+    const { page = 1, limit = 5 } = req.query; // default page is 1 and limit is 5
+
+    const students = await Student.find({ teacher: req.user.id })
+      .sort({
+        createdAt: -1,
+      }) // latest created first
+
+      .skip((page - 1) * limit) //
+      .limit(parseInt(limit));
+
+    const totalStudents = await Student.countDocuments({
+      teacher: req.user.id,
+    });
+    res.json({
+      students,
+      totalPages: Math.ceil(totalStudents / limit),
+      currentPage: parseInt(page),
+    });
   } catch (error) {
     res.status(500).json({ message: "Error fetching students", error });
   }

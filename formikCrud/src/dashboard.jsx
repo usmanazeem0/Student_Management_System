@@ -17,33 +17,24 @@ export default function DashBoard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activePage, setActivePage] = useState("home");
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalpages] = useState(1);
   const studentsPerPage = 5;
 
   useEffect(() => {
     const fetchedStudents = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/students/my-students",
+          `http://localhost:5000/students/my-students?page=${currentPage}&limit=${studentsPerPage}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        setStudents(res.data);
+        setStudents(res.data.students);
+        setTotalpages(res.data.totalPages);
       } catch (error) {
         console.log("error while fetching students", error);
       }
     };
     fetchedStudents();
-  }, []);
-
-  // calculate current students
-  const indexOfLastStudent = currentPage * studentsPerPage;
-  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = students.slice(
-    indexOfFirstStudent,
-    indexOfLastStudent
-  );
-
-  // total pages
-  const totalPages = Math.ceil(students.length / studentsPerPage);
+  }, [currentPage]);
 
   // Handle page change
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -263,14 +254,14 @@ export default function DashBoard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentStudents.length === 0 ? (
+                  {students.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="no-students">
                         No students added yet
                       </td>
                     </tr>
                   ) : (
-                    currentStudents.map((s) => (
+                    students.map((s) => (
                       <tr key={s._id}>
                         <td>{s.name}</td>
                         <td>{s.email}</td>
