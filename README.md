@@ -1,16 +1,17 @@
 Student Management System
 
 A full-stack Student Management System built with React (Frontend) and Node.js/Express (Backend), featuring JWT-based authentication, 
-CRUD operations for students, email notifications, and toast notifications for success and error events.
+CRUD operations for students, showed all the students in a table then added the pagination email notifications, and toast notifications for success and error events.
 
 
 Project Overview
 
 
-This project allows teachers to manage students efficiently. Teachers can register/login, add students, update student details, and delete students. 
+This project allows teachers to manage students efficiently. Teachers can register/login, add students, update student details, and delete students. Showed all the students in a table 
+and then add the pagination in frontEnd project so that each page should contain only 5 students.
 Each teacher can only see and manage students they have added. When a student is added, a random password is generated and sent to their email.
 Both teacher emails and student emails are unique in the system. Attempts to register with an already used email will return an error.
-The project uses React-Toastify to display success and error notifications for actions such as login, signup, adding/updating/deleting students, and email sending status.
+The project uses React-Toastify to display success and error notifications for actions such as login, signup, adding/updating/deleting students , and email sending status.
 The project is structured in frontend and backend folders, enabling clear separation of concerns and scalability.
 
 
