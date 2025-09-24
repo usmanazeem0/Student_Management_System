@@ -215,6 +215,47 @@
 .delete-btn:hover {
   background: #c0392b;
 }
+/* Pagination container */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+/* Default pagination buttons */
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  color: #333;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.pagination button:hover {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+/* Active page button */
+.pagination .active-page {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  border-color: #007bff;
+}
+
+/* Disabled buttons (Previous / Next when not available) */
+.pagination button:disabled {
+  background-color: #e9ecef;
+  color: #999;
+  border-color: #ddd;
+  cursor: not-allowed;
+}
 
 /* Responsive */
 @media (max-width: 768px) {

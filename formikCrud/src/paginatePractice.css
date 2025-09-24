@@ -1,0 +1,51 @@
+.practice-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.students-table th,
+.students-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.students-table th {
+  background: #2c3e50;
+  color: white;
+}
+
+.students-table tr:hover td {
+  background: #f1f1f1;
+}
+
+/* Pagination styles */
+.pagination {
+  display: flex;
+  list-style: none;
+  gap: 10px;
+  justify-content: center;
+  padding: 0;
+}
+
+.pagination li {
+  padding: 8px 12px;
+  border: 1px solid #2c3e50;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination li.active {
+  background: #2c3e50;
+  color: white;
+}
