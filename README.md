@@ -37,6 +37,19 @@ Responsive UI design.
 
 
 
+Student Dashboard with Toggleable Sidebar
+
+
+Responsive sidebar with open/close toggle button.
+Sidebar contains navigation buttons for Profile and Courses.
+Profile section allows teachers to add, edit, and manage courses.
+Courses section shows all courses in a table with Edit/Delete actions.
+Smooth animations when sidebar opens or closes.
+Responsive design ensures usability on both desktop and mobile devices.
+Maintains proper state for active tabs and form editing.
+
+
+
 Backend
 
 
