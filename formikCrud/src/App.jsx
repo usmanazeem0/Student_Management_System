@@ -10,6 +10,7 @@ import Login from "./login";
 import DashBoard from "./dashboard";
 import PrivateRoute from "./privateRoutes";
 import PublicRoute from "./publicRoute";
+import StudentDashboard from "./StudentDashboard";
 
 function App() {
   return (
@@ -39,6 +40,17 @@ function App() {
           </PrivateRoute>
         }
       />
+
+      <Route path="/student-dashboard" element={<StudentDashboard />} />
+
+      {/* <Route
+        path="/student-dashboard"
+        element={
+          <PrivateRoute>
+            <StudentDashboard />
+          </PrivateRoute>
+        }
+      /> */}
 
       <Route path="/" element={<Navigate to="/signup" />} />
     </Routes>

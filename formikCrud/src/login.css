@@ -63,11 +63,10 @@ body {
 /* Password wrapper for eye icon */
 .password-input-wrapper {
   position: relative;
-  width: 100%; /* full width for proper absolute positioning */
+  width: 100%;
   display: inline-block;
 }
 
-/* Extra right padding for inputs to fit eye icon */
 .password-input-wrapper input[type="password"],
 .password-input-wrapper input[type="text"] {
   padding-right: 3rem; /* space for the eye icon */
@@ -78,7 +77,7 @@ body {
 .password-toggle {
   position: absolute;
   top: 50%;
-  right: 10px; /* little space from right edge */
+  right: 10px;
   transform: translateY(-50%);
   border: none;
   background: none;
@@ -93,12 +92,40 @@ body {
   z-index: 2;
 }
 
-/* Remove background/outline on focus, hover, active */
 .password-toggle:focus,
 .password-toggle:hover,
 .password-toggle:active {
   outline: none;
   background: none;
+}
+
+/* Role group */
+.role-group {
+  margin-bottom: 1.5rem;
+}
+
+.role-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.role-options {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.role-option {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.role-option input[type="radio"] {
+  margin-right: 0.5rem;
+  accent-color: #007bff;
 }
 
 /* Error messages */
