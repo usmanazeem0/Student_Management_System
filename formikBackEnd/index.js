@@ -17,9 +17,11 @@ app.use(express.json());
 
 const studentRoutes = require("./routes/student.routes");
 const teacherRoutes = require("./routes/teacher.routes");
+const coursesRoutes = require("./routes/courses.routes");
 
 app.use("/students", studentRoutes);
 app.use("/teacher", teacherRoutes);
+app.use("/courses", coursesRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)

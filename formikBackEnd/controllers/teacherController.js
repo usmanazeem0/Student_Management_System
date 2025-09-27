@@ -1,27 +1,21 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const User = require("../models/user");
+const Teacher = require("../models/user");
+const Student = require("../models/students");
 
 exports.teacherSignup = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
-    // now check if user exists
-
-    const existingUser = await User.findOne({ email });
-
-    // check the condition for user
+    const existingUser = await Teacher.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "email already exists" });
+      return res.status(400).json({ message: "Email already exists" });
     }
-
-    // now, convert the plain password to hashPassword
 
     const hashPassword = await bcrypt.hash(password, 10);
 
-    //create new user
-    const newUser = new User({
+    const newUser = new Teacher({
       firstName,
       lastName,
       email,
@@ -29,44 +23,44 @@ exports.teacherSignup = async (req, res) => {
     });
 
     await newUser.save();
-    res.status(201).json({ message: "user register successfully" });
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: "server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
 exports.teacherLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
-    //check if user exists
-    const user = await User.findOne({ email });
+    let user;
+    if (role === "teacher") {
+      user = await Teacher.findOne({ email });
+    } else if (role === "student") {
+      user = await Student.findOne({ email });
+    } else {
+      return res.status(400).json({ message: "Role is required" });
+    }
+
     if (!user) {
       return res.status(400).json({ message: "Invalid Email or Password" });
     }
 
-    // compare the password with the has password
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).json({ message: "Invalid Email or passeord" });
+      return res.status(400).json({ message: "Invalid Email or Password" });
     }
 
-    // generate json web token
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id, role }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
 
-    console.log("this is token========", token);
-
-    //success
     res.status(200).json({
-      message: "Successfull Login",
+      message: "Successful Login",
       token,
-      user: { id: user._id, email: user.email },
+      user: { id: user._id, email: user.email, role },
     });
   } catch (error) {
-    res.status(500).json({ message: "server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

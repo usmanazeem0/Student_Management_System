@@ -37,10 +37,8 @@ export default function Login() {
     }),
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
-        const url =
-          values.role === "teacher"
-            ? "http://localhost:5000/teacher/login"
-            : "http://localhost:5000/student/login";
+        const url = "http://localhost:5000/teacher/login";
+
         const res = await axios.post(
           // "http://localhost:5000/teacher/login",
           url,

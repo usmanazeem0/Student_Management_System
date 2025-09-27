@@ -4,6 +4,7 @@ const studentSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, minLength: 3 },
     email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     course: { type: String, required: true, minLength: 3 },
     dob: { type: Date, required: true }, // Date of birth
     teacher: {

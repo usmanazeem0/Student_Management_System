@@ -35,22 +35,22 @@ function App() {
       <Route
         path="/dashboard"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["teacher"]}>
             <DashBoard />
           </PrivateRoute>
         }
       />
+      {/* 
+      <Route path="/student-dashboard" element={<StudentDashboard />} /> */}
 
-      <Route path="/student-dashboard" element={<StudentDashboard />} />
-
-      {/* <Route
+      <Route
         path="/student-dashboard"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["student"]}>
             <StudentDashboard />
           </PrivateRoute>
         }
-      /> */}
+      />
 
       <Route path="/" element={<Navigate to="/signup" />} />
     </Routes>

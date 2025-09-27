@@ -1,4 +1,5 @@
 const Student = require("../models/students");
+const bcrypt = require("bcryptjs");
 const generateRandomPassword = require("../utils/generatePassword");
 const sendEmail = require("../utils/sendEmail");
 exports.studentAdd = async (req, res) => {
@@ -15,6 +16,7 @@ exports.studentAdd = async (req, res) => {
     }
 
     const randomPassword = generateRandomPassword(8);
+    const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
     // else create new student
 
@@ -24,6 +26,7 @@ exports.studentAdd = async (req, res) => {
       course,
       dob,
       teacher: req.user.id,
+      password: hashedPassword,
     });
     await newStudent.save();
 
@@ -34,7 +37,6 @@ exports.studentAdd = async (req, res) => {
         subject: "Your Account Password",
         text: `Hello ${name},\n\nYour account has been created.\nYour password: ${randomPassword}\n\nPlease change it after login.`,
       });
-      console.log(" Email sent to:", email);
     } catch (emailError) {
       console.error(" Email sending failed:", emailError.message);
     }
