@@ -15,6 +15,9 @@ export default function StudentDashboard() {
   const [courses, setCourses] = useState([]);
   const [editingCourseId, setEditingCourseId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [searchName, setSearchName] = useState("");
+  const [searchCode, setSearchCode] = useState("");
+  const [searchCreditHour, setSearchCreditHour] = useState("");
 
   const token = localStorage.getItem("token");
 
@@ -22,6 +25,36 @@ export default function StudentDashboard() {
   useEffect(() => {
     fetchCourses();
   }, []);
+
+  // filter the students for search filters
+
+  const filterCourses = courses.filter((course) => {
+    const matchName =
+      searchName !== "" &&
+      course.courseName.toLowerCase().includes(searchName.toLowerCase());
+
+    const matchCode =
+      searchCode !== "" && String(course.courseCode) === searchCode;
+
+    const matchCreditHour =
+      searchCreditHour !== "" && String(course.creditHour) === searchCreditHour;
+
+    // if no filters apply show all the added courses
+
+    if (searchName === "" && searchCode === "" && searchCreditHour === "") {
+      return true;
+    }
+    return matchName || matchCode || matchCreditHour;
+    // return (
+    //   (searchName === "" ||
+    //     course.courseName
+    //       .toLowerCase()
+    //       .includes(searchName.toLocaleLowerCase())) &&
+    //   (searchCode === "" || String(course.courseCode) === searchCode) &&
+    //   (searchCreditHour === "" ||
+    //     String(course.creditHour) === searchCreditHour)
+    // );
+  });
 
   const fetchCourses = async () => {
     try {
@@ -208,6 +241,26 @@ export default function StudentDashboard() {
           {activeTab === "courses" && (
             <div className="courses-section">
               <h2>All Courses</h2>
+              <div className="search-filters">
+                <input
+                  type="text"
+                  placeholder="Search by Course Name"
+                  value={searchName}
+                  onChange={(e) => setSearchName(e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="Search by Course Code"
+                  value={searchCode}
+                  onChange={(e) => setSearchCode(e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="Search by Credit Hour"
+                  value={searchCreditHour}
+                  onChange={(e) => setSearchCreditHour(e.target.value)}
+                />
+              </div>
               <table className="courses-table">
                 <thead>
                   <tr>
@@ -218,8 +271,8 @@ export default function StudentDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {courses.length > 0 ? (
-                    courses.map((course) => (
+                  {filterCourses.length > 0 ? (
+                    filterCourses.map((course) => (
                       <tr key={course._id}>
                         <td>{course.courseName}</td>
                         <td>{course.courseCode}</td>

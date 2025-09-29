@@ -30,7 +30,6 @@ async function sendEmail({ to, subject, text }) {
   };
 
   await transporter.sendMail(mailOptions);
-  console.log(`Email sent to ${to} using ${service}`);
 }
 
 module.exports = sendEmail;
