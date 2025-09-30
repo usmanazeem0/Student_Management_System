@@ -27,7 +27,26 @@ exports.addCourse = async (req, res) => {
 exports.fetchCourse = async (req, res) => {
   try {
     const studentId = req.user.id;
-    const courses = await Course.find({ student: studentId });
+
+    const { courseName, courseCode, creditHour } = req.query;
+
+    // Base filter: only courses of logged-in student
+    let query = { student: studentId };
+
+    const filters = {};
+    if (req.query.courseName) {
+      filters.courseName = { $regex: req.query.courseName, $options: "i" };
+    }
+    if (req.query.courseCode) {
+      filters.courseCode = req.query.courseCode;
+    }
+    if (req.query.creditHour) {
+      filters.creditHour = req.query.creditHour;
+    }
+
+    const courses = await Course.find({
+      $or: Object.entries(filters).map(([k, v]) => ({ [k]: v })),
+    });
     res.status(200).json(courses);
   } catch (error) {
     res.status(500).json({ message: "Server Error" });

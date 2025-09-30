@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaSignOutAlt, FaUser, FaBook, FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -21,48 +21,80 @@ export default function StudentDashboard() {
 
   const token = localStorage.getItem("token");
 
+  const abortControllerRef = useRef(null);
   //useEffect to fetch courses from the backend
   useEffect(() => {
-    fetchCourses();
-  }, []);
-
-  // filter the students for search filters
-
-  const filterCourses = courses.filter((course) => {
-    const matchName =
-      searchName !== "" &&
-      course.courseName.toLowerCase().includes(searchName.toLowerCase());
-
-    const matchCode =
-      searchCode !== "" && String(course.courseCode) === searchCode;
-
-    const matchCreditHour =
-      searchCreditHour !== "" && String(course.creditHour) === searchCreditHour;
-
-    // if no filters apply show all the added courses
-
-    if (searchName === "" && searchCode === "" && searchCreditHour === "") {
-      return true;
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
-    return matchName || matchCode || matchCreditHour;
-    // return (
-    //   (searchName === "" ||
-    //     course.courseName
-    //       .toLowerCase()
-    //       .includes(searchName.toLocaleLowerCase())) &&
-    //   (searchCode === "" || String(course.courseCode) === searchCode) &&
-    //   (searchCreditHour === "" ||
-    //     String(course.creditHour) === searchCreditHour)
-    // );
-  });
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+    fetchCourses(
+      {
+        courseName: searchName,
+        courseCode: searchCode,
+        creditHour: searchCreditHour,
+      },
+      controller.signal
+    );
+    return () => {
+      controller.abort();
+    };
+  }, [searchName, searchCode, searchCreditHour]);
 
-  const fetchCourses = async () => {
+  // // filter the students for search filters
+
+  // const filterCourses = courses.filter((course) => {
+  //   const matchName =
+  //     searchName !== "" &&
+  //     course.courseName.toLowerCase().includes(searchName.toLowerCase());
+
+  //   const matchCode =
+  //     searchCode !== "" && String(course.courseCode) === searchCode;
+
+  //   const matchCreditHour =
+  //     searchCreditHour !== "" && String(course.creditHour) === searchCreditHour;
+
+  //   // if no filters apply show all the added courses
+
+  //   if (searchName === "" && searchCode === "" && searchCreditHour === "") {
+  //     return true;
+  //   }
+  //   return matchName || matchCode || matchCreditHour;
+  //   // return (
+  //   //   (searchName === "" ||
+  //   //     course.courseName
+  //   //       .toLowerCase()
+  //   //       .includes(searchName.toLocaleLowerCase())) &&
+  //   //   (searchCode === "" || String(course.courseCode) === searchCode) &&
+  //   //   (searchCreditHour === "" ||
+  //   //     String(course.creditHour) === searchCreditHour)
+  //   // );
+  // });
+
+  const fetchCourses = async (filters = {}, signal) => {
     try {
-      const res = await axios.get("http://localhost:5000/courses/my-courses", {
+      const cleanFilters = Object.fromEntries(
+        Object.entries(filters)
+          .filter(([_, v]) => v !== "" && v != null)
+          .map(([k, v]) => [k, typeof v === "string" ? v.trim() : v])
+      );
+
+      const params = new URLSearchParams(cleanFilters).toString();
+      const url = params
+        ? `http://localhost:5000/courses/my-courses?${params}`
+        : `http://localhost:5000/courses/my-courses`;
+
+      const res = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` },
+        signal,
       });
+
       setCourses(res.data);
     } catch (error) {
+      if (error?.code === "ERR_CANCELED" || error?.name === "CanceledError") {
+        return;
+      }
       console.error("Error fetching courses:", error);
     }
   };
@@ -71,13 +103,12 @@ export default function StudentDashboard() {
     initialValues: { courseName: "", courseCode: "", creditHour: "" },
     validationSchema: Yup.object({
       courseName: Yup.string().required("Course name is required"),
-      courseCode: Yup.number()
+      courseCode: Yup.string()
         .required("Course code is required")
-        .positive("Must be positive"),
-      creditHour: Yup.number()
+        .matches(/^\d+$/, "Must be a number"),
+      creditHour: Yup.string()
         .required("Credit hours are required")
-        .min(1, "Min 1")
-        .max(6, "Max 6"),
+        .matches(/^[1-6]$/, "Must be between 1 and 6"),
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
@@ -206,7 +237,7 @@ export default function StudentDashboard() {
                   <input
                     id="courseCode"
                     name="courseCode"
-                    type="number"
+                    type="text"
                     {...formik.getFieldProps("courseCode")}
                   />
                   {formik.touched.courseCode && formik.errors.courseCode && (
@@ -221,7 +252,7 @@ export default function StudentDashboard() {
                   <input
                     id="creditHour"
                     name="creditHour"
-                    type="number"
+                    type="text"
                     {...formik.getFieldProps("creditHour")}
                   />
                   {formik.touched.creditHour && formik.errors.creditHour && (
@@ -249,13 +280,13 @@ export default function StudentDashboard() {
                   onChange={(e) => setSearchName(e.target.value)}
                 />
                 <input
-                  type="number"
+                  type="text"
                   placeholder="Search by Course Code"
                   value={searchCode}
                   onChange={(e) => setSearchCode(e.target.value)}
                 />
                 <input
-                  type="number"
+                  type="text"
                   placeholder="Search by Credit Hour"
                   value={searchCreditHour}
                   onChange={(e) => setSearchCreditHour(e.target.value)}
@@ -271,8 +302,8 @@ export default function StudentDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filterCourses.length > 0 ? (
-                    filterCourses.map((course) => (
+                  {courses.length > 0 ? (
+                    courses.map((course) => (
                       <tr key={course._id}>
                         <td>{course.courseName}</td>
                         <td>{course.courseCode}</td>
