@@ -1,16 +1,10 @@
 {
-  "build": {
-    "builder": "NIXPACKS",
-    "buildCommand": "cd formikBackEnd && npm install"
-  },
-  "deploy": {
-    "startCommand": "cd formikBackEnd && npm start"
-  }
-
-  {
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
-    "builder": "RAILPACK"
+    "builder": "RAILPACK",
+    "watchPatterns": [
+      "/formikBackEnd/**"
+    ]
   },
   "deploy": {
     "runtime": "V2",
@@ -25,5 +19,4 @@
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
-}
 }
