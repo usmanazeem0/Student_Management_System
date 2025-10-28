@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "cd formikBackEnd && npm install"
+  },
+  "deploy": {
+    "startCommand": "cd formikBackEnd && npm start"
+  }
+}
