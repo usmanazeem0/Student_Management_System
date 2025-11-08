@@ -177,6 +177,8 @@
   border: none;
   color: white;
   cursor: pointer;
+  margin-left: 20px;
+  margin-top: 10px;
 }
 .action-btn.edit {
   background: #27ae60;

@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as Yup from "yup";
 import "./studentDashboard.css";
 import axios from "axios";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function StudentDashboard() {
   const navigate = useNavigate();
@@ -82,8 +83,10 @@ export default function StudentDashboard() {
 
       const params = new URLSearchParams(cleanFilters).toString();
       const url = params
-        ? `http://localhost:5000/courses/my-courses?${params}`
-        : `http://localhost:5000/courses/my-courses`;
+        ? // ? `http://localhost:5000/courses/my-courses?${params}`
+          // : `http://localhost:5000/courses/my-courses`;
+          `${API_BASE}/courses/my-courses?${params}`
+        : `${API_BASE}/courses/my-courses`;
 
       const res = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` },
@@ -114,16 +117,22 @@ export default function StudentDashboard() {
       try {
         if (editingCourseId) {
           await axios.put(
-            `http://localhost:5000/courses/${editingCourseId}`,
+            `${API_BASE}/courses/${editingCourseId}`,
+            // `http://localhost:5000/courses/${editingCourseId}`,
             values,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           toast.success("Course updated successfully!");
           setEditingCourseId(null);
         } else {
-          await axios.post("http://localhost:5000/courses/addCourse", values, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          await axios.post(
+            // "http://localhost:5000/courses/addCourse",
+            `${API_BASE}/courses/addCourse`,
+            values,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
           toast.success("Course added successfully!");
         }
 
@@ -146,9 +155,13 @@ export default function StudentDashboard() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/courses/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        // `http://localhost:5000/courses/${id}`,
+        `${API_BASE}/courses/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       toast.success("Course deleted successfully!");
 
       fetchCourses();

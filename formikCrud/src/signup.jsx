@@ -7,6 +7,7 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // eye icons
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import "./signup.css";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 export default function Signup() {
   const navigate = useNavigate();
 
@@ -69,7 +70,8 @@ export default function Signup() {
     onSubmit: async (values, { resetForm }) => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/teacher/signup",
+          // "http://localhost:5000/teacher/signup",
+          `${API_BASE}/teacher/signup`,
           {
             firstName: values.firstName,
             lastName: values.lastName,

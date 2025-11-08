@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { FaSignOutAlt, FaBars, FaHome, FaUserGraduate } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import "./dashboard.css";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function DashBoard() {
   const navigate = useNavigate();
@@ -24,7 +25,8 @@ export default function DashBoard() {
     const fetchedStudents = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/students/my-students?page=${currentPage}&limit=${studentsPerPage}`,
+          `${API_BASE}/students/my-students?page=${currentPage}&limit=${studentsPerPage}`,
+          // `http://localhost:5000/students/my-students?page=${currentPage}&limit=${studentsPerPage}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setStudents(res.data.students);
@@ -82,7 +84,8 @@ export default function DashBoard() {
       try {
         if (editingStudentId) {
           const response = await axios.put(
-            `http://localhost:5000/students/${editingStudentId}`,
+            // `http://localhost:5000/students/${editingStudentId}`,
+            `${API_BASE}/students/${editingStudentId}`,
             values,
             { headers: { Authorization: `Bearer ${token}` } }
           );
@@ -95,7 +98,8 @@ export default function DashBoard() {
           setEditingStudentId(null);
         } else {
           const response = await axios.post(
-            "http://localhost:5000/students/add",
+            // "http://localhost:5000/students/add",
+            `${API_BASE}/students/add`,
             values,
             { headers: { Authorization: `Bearer ${token}` } }
           );
@@ -116,9 +120,13 @@ export default function DashBoard() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/students/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        // `http://localhost:5000/students/${id}`,
+        `${API_BASE}/students/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setStudents((prev) => prev.filter((s) => s._id !== id));
       toast.success("Student deleted successfully");
     } catch (error) {

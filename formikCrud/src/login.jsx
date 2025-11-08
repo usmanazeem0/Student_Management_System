@@ -7,6 +7,7 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useNavigate, Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import "./login.css";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function Login() {
   const navigate = useNavigate();
@@ -37,7 +38,8 @@ export default function Login() {
     }),
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
-        const url = "http://localhost:5000/teacher/login";
+        const url = `${import.meta.env.VITE_API_BASE_URL}/teacher/login`;
+        // "http://localhost:5000/teacher/login";
 
         const res = await axios.post(
           // "http://localhost:5000/teacher/login",
