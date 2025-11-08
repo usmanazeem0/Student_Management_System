@@ -46,6 +46,8 @@
 .sidebar {
   background: #34495e;
   color: white;
+  flex-basis: 200px;
+  width: 200px; /* fixed width */
   min-width: 200px;
   height: 100vh;
   transition: all 0.3s ease;
@@ -53,6 +55,7 @@
 }
 
 .sidebar.collapsed {
+  flex-basis: 60px;
   width: 60px;
   min-width: 60px;
 }
@@ -89,9 +92,12 @@
 /* Main Content */
 .dashboard-main {
   flex: 1;
+  min-width: 0;
   background: #f8f9fa;
   padding: 2rem;
   overflow-y: auto;
+  overflow-x: auto;
+  transition: all 0.3s ease;
 }
 
 /* Section titles */
@@ -155,11 +161,21 @@
 }
 
 /* Table */
+
+.table-wrapper {
+  width: 80%;
+  margin-left: 20%;
+  margin-right: 20%;
+  overflow-x: auto; /* allows horizontal scroll if table is wide */
+}
 .students-table {
   width: 100%;
+  min-width: 600px;
   border-collapse: collapse;
   background: white;
   margin-top: 1rem;
+
+  /* margin-left: 15%; */
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);

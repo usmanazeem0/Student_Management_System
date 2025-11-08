@@ -251,49 +251,51 @@ export default function DashBoard() {
           {activePage === "students" && (
             <div className="students-section">
               <h2 className="section-title">My Students</h2>
-              <table className="students-table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Course</th>
-                    <th>DOB</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {students.length === 0 ? (
+              <div className="table-wrapper">
+                <table className="students-table">
+                  <thead>
                     <tr>
-                      <td colSpan={5} className="no-students">
-                        No students added yet
-                      </td>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Course</th>
+                      <th>DOB</th>
+                      <th>Action</th>
                     </tr>
-                  ) : (
-                    students.map((s) => (
-                      <tr key={s._id}>
-                        <td>{s.name}</td>
-                        <td>{s.email}</td>
-                        <td>{s.course}</td>
-                        <td>{new Date(s.dob).toLocaleDateString()}</td>
-                        <td>
-                          <button
-                            onClick={() => handleEdit(s)}
-                            className="edit-btn"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleDelete(s._id)}
-                            className="delete-btn"
-                          >
-                            Delete
-                          </button>
+                  </thead>
+                  <tbody>
+                    {students.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="no-students">
+                          No students added yet
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                    ) : (
+                      students.map((s) => (
+                        <tr key={s._id}>
+                          <td>{s.name}</td>
+                          <td>{s.email}</td>
+                          <td>{s.course}</td>
+                          <td>{new Date(s.dob).toLocaleDateString()}</td>
+                          <td>
+                            <button
+                              onClick={() => handleEdit(s)}
+                              className="edit-btn"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(s._id)}
+                              className="delete-btn"
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
               {/* Pagination */}
               <div className="pagination">
                 <button
